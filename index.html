@@ -55,10 +55,10 @@ ul{margin-left:22px}
     border-left:4px solid var(--green);overflow-x:auto;
 }
 canvas{
-    width:100%;height:300px;background:#000;border-radius:12px;margin:20px 0;
+    width:100%;height:320px;background:#000;border-radius:12px;margin:20px 0;
 }
 .controls{
-    display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:20px;
+    display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center;margin:20px 0;
 }
 button{
     padding:10px 18px;border:none;border-radius:10px;
@@ -66,10 +66,19 @@ button{
     color:#fff;font-weight:bold;cursor:pointer;
 }
 button:hover{transform:translateY(-2px)}
-input{width:140px}
-.tip{text-align:center;color:#90a4ae;font-size:14px;margin-bottom:16px}
+.slider-group{
+    display:flex;align-items:center;gap:6px;color:#fff;
+}
+input[type="range"]{
+    width:160px;cursor:pointer;
+}
+.tip{text-align:center;color:#90a4ae;font-size:14px;margin:10px 0;}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-@media(max-width:768px){.grid{grid-template-columns:1fr}}
+@media (max-width:768px){
+    .grid{grid-template-columns:1fr;}
+    h1{font-size:28px;}
+    .card{padding:20px;}
+}
 </style>
 </head>
 <body>
@@ -122,16 +131,26 @@ input{width:140px}
 </div>
 
 <div id="wave" class="card">
-    <h2>二、动态波形交互实验</h2>
-    <p>鼠标移动 → 改变波形<br>滑块调节 → 频率/振幅<br>点击 → 波纹特效</p>
+    <h2>二、动态波形交互式实验</h2>
+    <p>✅ 滑块调节：频率 / 振幅<br>✅ 5种波形一键切换<br>✅ 鼠标移动改变波形<br>✅ 点击产生波纹特效</p>
     <canvas id="cvs"></canvas>
     <div class="tip">鼠标移动可改变波形形状 | 点击产生波纹</div>
+    
     <div class="controls">
         <button onclick="setW('sin')">正弦波</button>
         <button onclick="setW('cos')">余弦波</button>
         <button onclick="setW('square')">方波</button>
         <button onclick="setW('saw')">锯齿波</button>
         <button onclick="setW('tri')">三角波</button>
+        
+        <div class="slider-group">
+            <label>频率</label>
+            <input type="range" id="freq" min="0.01" max="0.08" step="0.001" value="0.03">
+        </div>
+        <div class="slider-group">
+            <label>振幅</label>
+            <input type="range" id="amp" min="20" max="100" step="1" value="50">
+        </div>
     </div>
 </div>
 
@@ -214,15 +233,30 @@ input{width:140px}
 <script>
 const c=document.getElementById('cvs');
 const x=c.getContext('2d');
-let W=innerWidth,H=300,wt='sin',amp=50,fq=0.03,tm=0;
-c.width=W;c.height=H;
+const freqSlider=document.getElementById('freq');
+const ampSlider=document.getElementById('amp');
 
+let W=c.width=window.innerWidth;
+let H=c.height=320;
+let wt='sin';
+let amp=50;
+let fq=0.03;
+let tm=0;
+
+// 滑块实时控制
+freqSlider.oninput=()=>{fq=parseFloat(freqSlider.value)}
+ampSlider.oninput=()=>{amp=parseInt(ampSlider.value)}
+
+// 鼠标控制波形
 c.addEventListener('mousemove',e=>{
     const r=c.getBoundingClientRect();
-    amp=Math.max(20,Math.min(90,H/2-(e.y-r.top)));
-    fq=0.01+(e.x-r.left)/W*0.05;
+    amp=Math.max(20,Math.min(100,H/2-(e.y-r.top)));
+    fq=0.01+(e.x-r.left)/W*0.07;
+    freqSlider.value=fq;
+    ampSlider.value=amp;
 });
 
+// 点击波纹
 c.addEventListener('click',e=>{
     const r=c.getBoundingClientRect();
     let ri=document.createElement('div');
