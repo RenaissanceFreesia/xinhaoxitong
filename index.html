@@ -3,343 +3,175 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>信号与系统 | 交互式学习平台</title>
+  <title>信号与系统 | 交互式实验平台</title>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --bg: #f2efeb;
-      --card: #ffffff;
-      --text: #5c5853;
-      --sub: #8a857e;
-      --line: #e0dcd6;
-      --m1: #b8b0a8;
-      --m2: #a9b4b8;
-      --m3: #c9b9b0;
-      --shadow: rgba(92, 88, 83, 0.08);
-    }
-
-    body {
-      font-family: "Microsoft YaHei", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.9;
-      padding-bottom: 60px;
-    }
-
-    nav {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: rgba(255,255,255,0.9);
-      backdrop-filter: blur(6px);
-      box-shadow: 0 2px 10px var(--shadow);
-      z-index: 999;
-    }
-    .nav-wrap {
-      max-width: 1100px;
-      margin: auto;
-      padding: 14px 20px;
-    }
-    nav ul {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 8px 14px;
-      list-style: none;
-    }
-    nav a {
-      color: var(--sub);
-      text-decoration: none;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 14px;
-      transition: 0.3s;
-    }
-    nav a:hover {
-      background: var(--m1);
-      color: white;
-    }
-
-    header {
-      margin-top: 100px;
-      text-align: center;
-      padding: 0 20px 40px;
-    }
-    header h1 {
-      font-size: 2.4rem;
-      font-weight: 500;
-      background: linear-gradient(90deg, #b8b0a8, #a9b4b8, #c9b9b0);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    header p {
-      color: var(--sub);
-      margin-top: 10px;
-    }
-    .divider {
-      width: 80px;
-      height: 2px;
-      background: var(--m1);
-      margin: 20px auto;
-      opacity: 0.5;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 0 20px;
-      display: grid;
-      gap: 30px;
-    }
-
-    .card {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 30px;
-      box-shadow: 0 6px 18px var(--shadow);
-      border-left: 5px solid var(--m1);
-      transition: 0.4s;
-    }
-    .card:hover {
-      transform: translateY(-6px);
-    }
-    .card h2 {
-      font-size: 1.4rem;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--line);
-      color: var(--text);
-    }
-    .card p {
-      text-indent: 2em;
-      margin: 10px 0;
-    }
-    .card li {
-      list-style: none;
-      margin: 8px 0 8px 24px;
-      position: relative;
-    }
-    .card li::before {
-      content: '•';
-      color: var(--m2);
-      position: absolute;
-      left: -16px;
-    }
-
-    .wave-box {
-      margin: 20px 0;
-      text-align: center;
-    }
-    canvas {
-      max-width: 100%;
-      border-radius: 12px;
-      background: #f9f7f4;
-      border: 1px solid var(--line);
-    }
-    .controls {
-      margin-top: 14px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-    }
-    button {
-      padding: 6px 12px;
-      border: none;
-      border-radius: 10px;
-      background: var(--m2);
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background: var(--m1);
-    }
-    input[type="range"] {
-      margin: 0 10px;
-    }
-
-    .formula {
-      background: #f7f5f1;
-      padding: 14px;
-      border-radius: 10px;
-      margin: 14px 0;
-      overflow-x: auto;
-      border-left: 3px solid var(--m2);
-    }
-
-    .back-top {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: var(--m1);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--bg:#f2efeb;--card:#fff;--text:#5c5853;--sub:#8a857e;--line:#e0dcd6;--m1:#b8b0a8;--m2:#a9b4b8;--m3:#c9b9b0;--shadow:rgba(92,88,83,0.08)}
+    body{font-family:"Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.9;padding-bottom:60px}
+    nav{position:fixed;top:0;width:100%;background:rgba(255,255,255,0.9);backdrop-filter:blur(6px);box-shadow:0 2px 10px var(--shadow);z-index:999}
+    .nav-wrap{max-width:1100px;margin:auto;padding:14px 20px}
+    nav ul{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 14px;list-style:none}
+    nav a{color:var(--sub);text-decoration:none;padding:6px 12px;border-radius:20px;font-size:14px;transition:0.3s}
+    nav a:hover{background:var(--m1);color:#fff}
+    header{margin-top:100px;text-align:center;padding:0 20px 40px}
+    header h1{font-size:2.4rem;font-weight:500;background:linear-gradient(90deg,#b8b0a8,#a9b4b8,#c9b9b0);-webkit-background-clip:text;background-clip:text;color:transparent}
+    header p{color:var(--sub);margin-top:10px}
+    .divider{width:80px;height:2px;background:var(--m1);margin:20px auto;opacity:.5}
+    .container{max-width:1100px;margin:auto;padding:0 20px;display:grid;gap:30px}
+    .card{background:var(--card);border-radius:16px;padding:30px;box-shadow:0 6px 18px var(--shadow);border-left:5px solid var(--m1);transition:.4s}
+    .card:hover{transform:translateY(-6px)}
+    .card h2{font-size:1.4rem;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--line);color:var(--text)}
+    .card p{text-indent:2em;margin:10px 0}
+    .card li{list-style:none;margin:8px 0 8px 24px;position:relative}
+    .card li::before{content:'•';color:var(--m2);position:absolute;left:-16px}
+    .wave-box{margin:20px 0;text-align:center}
+    canvas{max-width:100%;border-radius:12px;background:#f9f7f4;border:1px solid var(--line)}
+    .controls{margin-top:14px;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;align-items:center}
+    button{padding:6px 12px;border:none;border-radius:10px;background:var(--m2);color:#fff;cursor:pointer}
+    button:hover{background:var(--m1)}
+    .formula{background:#f7f5f1;padding:14px;border-radius:10px;margin:14px 0;overflow-x:auto;border-left:3px solid var(--m2)}
+    .back-top{position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:var(--m1);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none}
+    #dataBox{margin-top:8px;font-size:14px;color:var(--sub)}
   </style>
 </head>
-
 <body>
 
-  <nav>
-    <div class="nav-wrap">
-      <ul>
-        <li><a href="#intro">课程介绍</a></li>
-        <li><a href="#wave">动态波形</a></li>
-        <li><a href="#convolution">卷积</a></li>
-        <li><a href="#fourier">傅里叶</a></li>
-        <li><a href="#sampling">抽样恢复</a></li>
-      </ul>
-    </div>
-  </nav>
-
-  <header>
-    <h1>信号与系统 · 交互式学习平台</h1>
-    <p>时域 | 频域 | 卷积 | 抽样 | 动态实验</p>
-    <div class="divider"></div>
-  </header>
-
-  <div class="container">
-
-    <div id="intro" class="card">
-      <h2>📘 课程介绍</h2>
-      <p>《信号与系统》是电子信息、通信、自动化专业的核心基础课，研究信号表示、系统特性、变换方法与工程应用。</p>
-      <ul>
-        <li>连续时间信号与离散时间信号</li>
-        <li>LTI系统、卷积、时域分析</li>
-        <li>傅里叶级数、傅里叶变换、频域分析</li>
-        <li>拉普拉斯变换、Z变换、系统稳定性</li>
-        <li>奈奎斯特抽样、信号重构与混叠</li>
-      </ul>
-    </div>
-
-    <div id="wave" class="card">
-      <h2>📈 动态正弦波实验（可调节）</h2>
-      <p>拖动滑块调节频率/幅度，观察波形实时变化。</p>
-      <div class="wave-box">
-        <canvas id="waveCanvas" width="700" height="260"></canvas>
-        <div class="controls">
-          <label>频率: <input type="range" id="freq" min="1" max="10" value="3"></label>
-          <label>幅度: <input type="range" id="amp" min="20" max="100" value="80"></label>
-          <button onclick="toggleAnimate()">暂停/播放</button>
-        </div>
-      </div>
-    </div>
-
-    <div id="convolution" class="card">
-      <h2>🔁 卷积与LTI系统</h2>
-      <p>卷积是LTI系统时域分析的核心，输出等于输入与冲激响应的卷积。</p>
-      <div class="formula">
-        \[y(t) = x(t) * h(t) = \int_{-\infty}^{\infty} x(\tau)h(t-\tau)d\tau\]
-      </div>
-      <ul>
-        <li>交换律：x*h = h*x</li>
-        <li>结合律：(x*h1)*h2 = x*(h1*h2)</li>
-        <li>分配律：x*(h1+h2) = x*h1 + x*h2</li>
-      </ul>
-    </div>
-
-    <div id="fourier" class="card">
-      <h2>📡 傅里叶变换（频域分析）</h2>
-      <p>将信号从时域转换到频域，揭示频率成分。</p>
-      <div class="formula">
-        \[X(j\omega) = \int_{-\infty}^{\infty} x(t)e^{-j\omega t}dt\]
-      </div>
-      <ul>
-        <li>时移性质：x(t−t0) ↔ X(jω)e−jωt0</li>
-        <li>卷积定理：时域卷积 ↔ 频域相乘</li>
-        <li>信号带宽、滤波、调制核心工具</li>
-      </ul>
-    </div>
-
-    <div id="sampling" class="card">
-      <h2>📶 奈奎斯特抽样与信号恢复</h2>
-      <p>抽样频率 fs > 2fmax 时，可无失真恢复原信号。</p>
-      <div class="formula">
-        \[f_s > 2f_{max}\]
-      </div>
-      <ul>
-        <li>抽样：x[n] = x(nT)</li>
-        <li>零阶保持、sinc函数插值恢复</li>
-        <li>fs 过低会产生混叠，无法还原信号</li>
-      </ul>
-    </div>
-
+<nav>
+  <div class="nav-wrap">
+    <ul>
+      <li><a href="#part1">基础概念</a></li>
+      <li><a href="#part2">时域分析</a></li>
+      <li><a href="#wave">波形实验</a></li>
+      <li><a href="#part3">傅里叶分析</a></li>
+      <li><a href="#part4">抽样定理</a></li>
+    </ul>
   </div>
+</nav>
 
-  <a href="#" class="back-top">↑</a>
+<header>
+  <h1>信号与系统 · 交互式实验平台</h1>
+  <p>动态波形 | 实时数据 | 完整知识点 | 课程作业专用</p>
+  <div class="divider"></div>
+</header>
 
-  <script>
-    const canvas = document.getElementById('waveCanvas');
-    const ctx = canvas.getContext('2d');
-    const freqSlider = document.getElementById('freq');
-    const ampSlider = document.getElementById('amp');
-    let t = 0;
-    let animate = true;
+<div class="container">
 
-    function drawAxis() {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      ctx.strokeStyle = '#b8b0a8';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(50, canvas.height/2);
-      ctx.lineTo(canvas.width-50, canvas.height/2);
-      ctx.moveTo(canvas.width/2, 50);
-      ctx.lineTo(canvas.width/2, canvas.height-50);
-      ctx.stroke();
+<div id="part1" class="card">
+  <h2>📘 一、信号与系统基础概念</h2>
+  <p>信号是信息的载体，系统用于处理信号。本课程核心研究信号表示、系统特性、变换理论。</p>
+  <ul>
+    <li>连续时间信号 x(t) 与离散时间信号 x[n]</li>
+    <li>周期信号、非周期信号、能量信号、功率信号</li>
+    <li>线性、时不变、因果、稳定四大核心性质</li>
+    <li>单位冲激信号、阶跃信号、抽样函数为基础信号</li>
+  </ul>
+</div>
+
+<div id="part2" class="card">
+  <h2>⏱️ 二、LTI系统时域分析</h2>
+  <p>LTI系统输出由输入信号与单位冲激响应卷积得到。</p>
+  <div class="formula">
+    \[y(t) = x(t) * h(t) = \int_{-\infty}^{\infty} x(\tau)h(t-\tau)d\tau\]
+  </div>
+  <ul>
+    <li>卷积满足交换律、结合律、分配律</li>
+    <li>冲激响应 h(t) 完全表征系统特性</li>
+    <li>零状态响应 = 输入 * 冲激响应</li>
+  </ul>
+</div>
+
+<div id="wave" class="card">
+  <h2>📈 交互式动态波形实验（带数据显示）</h2>
+  <p>点击切换波形，鼠标移动查看坐标数据。</p>
+  <div class="wave-box">
+    <canvas id="waveCanvas" width="750" height="300"></canvas>
+    <div id="dataBox">坐标数据：x=0, y=0</div>
+    <div class="controls">
+      <button onclick="setWave('sin')">正弦波</button>
+      <button onclick="setWave('square')">方波</button>
+      <button onclick="setWave('tri')">三角波</button>
+      <button onclick="setWave('step')">阶跃</button>
+      <button onclick="setWave('impulse')">冲激</button>
+      <button onclick="setWave('sa')">Sa函数</button>
+    </div>
+  </div>
+</div>
+
+<div id="part3" class="card">
+  <h2>📡 三、傅里叶分析</h2>
+  <p>傅里叶变换将信号从时域转为频域，揭示频率成分。</p>
+  <div class="formula">
+    \[X(j\omega) = \int_{-\infty}^{\infty} x(t)e^{-j\omega t}dt\]
+  </div>
+  <ul>
+    <li>周期信号用傅里叶级数分解</li>
+    <li>非周期信号用傅里叶变换</li>
+    <li>卷积定理：时域卷积 = 频域相乘</li>
+  </ul>
+</div>
+
+<div id="part4" class="card">
+  <h2>📶 四、奈奎斯特抽样定理</h2>
+  <p>带限信号最高频率 fₘ，抽样频率 fₛ > 2fₘ 可无失真恢复。</p>
+  <div class="formula">
+    \[f_s > 2f_m\]
+  </div>
+  <ul>
+    <li>抽样是连续信号转离散的核心步骤</li>
+    <li>抽样频率过低会产生频率混叠</li>
+    <li>可通过 sinc 插值无失真恢复原信号</li>
+  </ul>
+</div>
+
+</div>
+
+<a href="#" class="back-top">↑</a>
+
+<script>
+  const canvas=document.getElementById('waveCanvas');
+  const ctx=canvas.getContext('2d');
+  const dataBox=document.getElementById('dataBox');
+  let waveType='sin';
+  let t=0;
+
+  function drawAxis(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle='#b8b0a8';ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(50,canvas.height/2);ctx.lineTo(canvas.width-50,canvas.height/2);
+    ctx.moveTo(canvas.width/2,50);ctx.lineTo(canvas.width/2,canvas.height-50);
+    ctx.stroke();
+  }
+
+  function draw(){
+    drawAxis();ctx.lineWidth=2;ctx.strokeStyle='#a9b4b8';
+    ctx.beginPath();
+    for(let x=0;x<canvas.width;x++){
+      let nx=(x-canvas.width/2)/100;
+      let y=0;
+      if(waveType==='sin') y=80*Math.sin(3*nx+t);
+      if(waveType==='square') y=80*(Math.sin(3*nx+t)>0?1:-1);
+      if(waveType==='tri') y=80*(2/Math.PI)*Math.asin(Math.sin(3*nx+t));
+      if(waveType==='step') y=nx>0?-80:80;
+      if(waveType==='impulse'){y=(x===canvas.width/2)?-80:0;ctx.fillStyle='#a9b4b8';if(x===canvas.width/2){ctx.arc(x,canvas.height/2-80,6,0,Math.PI*2);ctx.fill()}}
+      if(waveType==='sa') y=nx===0?-80:-80*Math.sin(nx*5+t)/(nx*5+t);
+      y+=canvas.height/2;
+      if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
     }
+    ctx.stroke();t+=0.05;requestAnimationFrame(draw);
+  }
 
-    function drawWave() {
-      drawAxis();
-      const freq = parseFloat(freqSlider.value);
-      const amp = parseFloat(ampSlider.value);
-      ctx.strokeStyle = '#a9b4b8';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      for(let x=0;x<canvas.width;x++){
-        let time = (x - canvas.width/2)/100;
-        let y = amp * Math.sin(freq * (time + t)) + canvas.height/2;
-        if(x===0) ctx.moveTo(x,y);
-        else ctx.lineTo(x,y);
-      }
-      ctx.stroke();
-      if(animate) {
-        t += 0.05;
-        requestAnimationFrame(drawWave);
-      }
-    }
+  function setWave(type){waveType=type;}
+  draw();
 
-    function toggleAnimate() {
-      animate = !animate;
-      if(animate) drawWave();
-    }
-
-    drawWave();
-
-    document.querySelectorAll('nav a').forEach(a=>{
-      a.addEventListener('click',e=>{
-        e.preventDefault();
-        document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'});
-      });
-    });
-
-    document.querySelector('.back-top').addEventListener('click',e=>{
-      e.preventDefault();
-      window.scrollTo({top:0,behavior:'smooth'});
-    });
-  </script>
+  canvas.addEventListener('mousemove',(e)=>{
+    const rect=canvas.getBoundingClientRect();
+    const x=Math.round((e.clientX-rect.left-canvas.width/2)/100*10)/10;
+    const y=Math.round(((e.clientY-rect.top)-canvas.height/2)/80*10)/10;
+    dataBox.innerText=`坐标数据：x=${x}, y=${y}`;
+  });
+</script>
 
 </body>
 </html>
