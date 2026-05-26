@@ -1,177 +1,218 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>信号与系统 | 交互式实验平台</title>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    :root{--bg:#f2efeb;--card:#fff;--text:#5c5853;--sub:#8a857e;--line:#e0dcd6;--m1:#b8b0a8;--m2:#a9b4b8;--m3:#c9b9b0;--shadow:rgba(92,88,83,0.08)}
-    body{font-family:"Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.9;padding-bottom:60px}
-    nav{position:fixed;top:0;width:100%;background:rgba(255,255,255,0.9);backdrop-filter:blur(6px);box-shadow:0 2px 10px var(--shadow);z-index:999}
-    .nav-wrap{max-width:1100px;margin:auto;padding:14px 20px}
-    nav ul{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 14px;list-style:none}
-    nav a{color:var(--sub);text-decoration:none;padding:6px 12px;border-radius:20px;font-size:14px;transition:0.3s}
-    nav a:hover{background:var(--m1);color:#fff}
-    header{margin-top:100px;text-align:center;padding:0 20px 40px}
-    header h1{font-size:2.4rem;font-weight:500;background:linear-gradient(90deg,#b8b0a8,#a9b4b8,#c9b9b0);-webkit-background-clip:text;background-clip:text;color:transparent}
-    header p{color:var(--sub);margin-top:10px}
-    .divider{width:80px;height:2px;background:var(--m1);margin:20px auto;opacity:.5}
-    .container{max-width:1100px;margin:auto;padding:0 20px;display:grid;gap:30px}
-    .card{background:var(--card);border-radius:16px;padding:30px;box-shadow:0 6px 18px var(--shadow);border-left:5px solid var(--m1);transition:.4s}
-    .card:hover{transform:translateY(-6px)}
-    .card h2{font-size:1.4rem;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--line);color:var(--text)}
-    .card p{text-indent:2em;margin:10px 0}
-    .card li{list-style:none;margin:8px 0 8px 24px;position:relative}
-    .card li::before{content:'•';color:var(--m2);position:absolute;left:-16px}
-    .wave-box{margin:20px 0;text-align:center}
-    canvas{max-width:100%;border-radius:12px;background:#f9f7f4;border:1px solid var(--line)}
-    .controls{margin-top:14px;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;align-items:center}
-    button{padding:6px 12px;border:none;border-radius:10px;background:var(--m2);color:#fff;cursor:pointer}
-    button:hover{background:var(--m1)}
-    .formula{background:#f7f5f1;padding:14px;border-radius:10px;margin:14px 0;overflow-x:auto;border-left:3px solid var(--m2)}
-    .back-top{position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:var(--m1);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none}
-    #dataBox{margin-top:8px;font-size:14px;color:var(--sub)}
-  </style>
+<meta charset="UTF-8">
+<title>信号与系统 | 波形可视化与知识点</title>
+<!-- 防缓存 -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:"Microsoft YaHei",sans-serif;
+    background:linear-gradient(135deg,#0f1419,#1a2332);
+    color:#e0e6f0;
+    min-height:100vh;
+    padding:20px;
+  }
+  .container{
+    max-width:1100px;
+    margin:0 auto;
+  }
+  h1{
+    text-align:center;
+    font-size:28px;
+    margin-bottom:20px;
+    background:linear-gradient(90deg,#4fc3f7,#7c4dff);
+    -webkit-background-clip:text;
+    color:transparent;
+    animation:pulse 3s infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:0.9}
+    50%{opacity:1}
+  }
+  .card{
+    background:rgba(255,255,255,0.05);
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.3);
+    backdrop-filter:blur(8px);
+  }
+  #waveCanvas{
+    width:100%;
+    height:220px;
+    background:#000;
+    border-radius:8px;
+  }
+  .controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin:15px 0;
+  }
+  button{
+    padding:8px 14px;
+    border:none;
+    border-radius:8px;
+    background:linear-gradient(90deg,#4fc3f7,#7c4dff);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    transition:transform 0.2s,box-shadow 0.2s;
+  }
+  button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 4px 12px rgba(79,195,247,0.4);
+  }
+  .knowledge{
+    line-height:1.7;
+  }
+  .knowledge h3{
+    color:#4fc3f7;
+    margin:12px 0 8px;
+  }
+  .knowledge p{
+    margin:6px 0;
+  }
+  .ripple{
+    position:absolute;
+    border-radius:50%;
+    background:rgba(79,195,247,0.3);
+    transform:scale(0);
+    animation:ripple 0.6s linear;
+    pointer-events:none;
+  }
+  @keyframes ripple{
+    to{
+      transform:scale(4);
+      opacity:0;
+    }
+  }
+</style>
 </head>
 <body>
-
-<nav>
-  <div class="nav-wrap">
-    <ul>
-      <li><a href="#part1">基础概念</a></li>
-      <li><a href="#part2">时域分析</a></li>
-      <li><a href="#wave">波形实验</a></li>
-      <li><a href="#part3">傅里叶分析</a></li>
-      <li><a href="#part4">抽样定理</a></li>
-    </ul>
-  </div>
-</nav>
-
-<header>
-  <h1>信号与系统 · 交互式实验平台</h1>
-  <p>动态波形 | 实时数据 | 完整知识点 | 课程作业专用</p>
-  <div class="divider"></div>
-</header>
-
 <div class="container">
+  <h1>信号与系统 · 波形交互可视化</h1>
 
-<div id="part1" class="card">
-  <h2>📘 一、信号与系统基础概念</h2>
-  <p>信号是信息的载体，系统用于处理信号。本课程核心研究信号表示、系统特性、变换理论。</p>
-  <ul>
-    <li>连续时间信号 x(t) 与离散时间信号 x[n]</li>
-    <li>周期信号、非周期信号、能量信号、功率信号</li>
-    <li>线性、时不变、因果、稳定四大核心性质</li>
-    <li>单位冲激信号、阶跃信号、抽样函数为基础信号</li>
-  </ul>
-</div>
-
-<div id="part2" class="card">
-  <h2>⏱️ 二、LTI系统时域分析</h2>
-  <p>LTI系统输出由输入信号与单位冲激响应卷积得到。</p>
-  <div class="formula">
-    \[y(t) = x(t) * h(t) = \int_{-\infty}^{\infty} x(\tau)h(t-\tau)d\tau\]
-  </div>
-  <ul>
-    <li>卷积满足交换律、结合律、分配律</li>
-    <li>冲激响应 h(t) 完全表征系统特性</li>
-    <li>零状态响应 = 输入 * 冲激响应</li>
-  </ul>
-</div>
-
-<div id="wave" class="card">
-  <h2>📈 交互式动态波形实验（带数据显示）</h2>
-  <p>点击切换波形，鼠标移动查看坐标数据。</p>
-  <div class="wave-box">
-    <canvas id="waveCanvas" width="750" height="300"></canvas>
-    <div id="dataBox">坐标数据：x=0, y=0</div>
+  <div class="card">
+    <canvas id="waveCanvas"></canvas>
     <div class="controls">
       <button onclick="setWave('sin')">正弦波</button>
+      <button onclick="setWave('cos')">余弦波</button>
       <button onclick="setWave('square')">方波</button>
-      <button onclick="setWave('tri')">三角波</button>
-      <button onclick="setWave('step')">阶跃</button>
-      <button onclick="setWave('impulse')">冲激</button>
-      <button onclick="setWave('sa')">Sa函数</button>
+      <button onclick="setWave('sawtooth')">锯齿波</button>
     </div>
+    <p style="color:#b0c4de;font-size:14px">💡 鼠标在画布内移动 → 改变振幅/频率；点击任意位置有波纹反馈</p>
+  </div>
+
+  <div class="card knowledge">
+    <h3>📌 1. 基本信号定义</h3>
+    <p><strong>正弦信号</strong>：x(t)=A sin(ωt+φ)，周期、频率、振幅、相位四要素</p>
+    <p><strong>余弦信号</strong>：x(t)=A cos(ωt+φ)，与正弦相位差 90°</p>
+    <p><strong>方波</strong>：只有高低两种电平，富含奇次谐波，常用于数字电路</p>
+    <p><strong>锯齿波</strong>：线性上升+快速回落，含所有整数次谐波</p>
+
+    <h3>📌 2. 频率与周期关系</h3>
+    <p>周期 T：完成一次振动时间；频率 f=1/T；角频率 ω=2πf</p>
+    <p>例：f=1Hz → T=1s → ω=2π rad/s</p>
+
+    <h3>📌 3. 振幅与相位</h3>
+    <p><strong>振幅 A</strong>：信号最大偏离量，决定强弱</p>
+    <p><strong>相位 φ</strong>：决定 t=0 时刻位置，影响信号同步</p>
+
+    <h3>📌 4. 信号分类</h3>
+    <p><strong>连续时间信号</strong>：t 连续（如正弦波）</p>
+    <p><strong>离散时间信号</strong>：t 只在整数点有定义</p>
+    <p><strong>周期信号</strong>：满足 x(t+T)=x(t)，无始无终</p>
+    <p><strong>非周期信号</strong>：不重复，如单个脉冲</p>
+
+    <h3>📌 5. 线性时不变系统（LTI）</h3>
+    <p>满足<strong>线性（叠加+齐次）</strong>和<strong>时不变（延迟不变形）</strong></p>
+    <p>核心：输入 → 系统 → 输出；可用卷积描述</p>
+
+    <h3>📌 6. 傅里叶级数（FS）</h3>
+    <p>任何周期信号可分解为：直流+基波+各次谐波正弦/余弦之和</p>
+    <p>意义：时域 ↔ 频域，揭示信号频率组成</p>
   </div>
 </div>
-
-<div id="part3" class="card">
-  <h2>📡 三、傅里叶分析</h2>
-  <p>傅里叶变换将信号从时域转为频域，揭示频率成分。</p>
-  <div class="formula">
-    \[X(j\omega) = \int_{-\infty}^{\infty} x(t)e^{-j\omega t}dt\]
-  </div>
-  <ul>
-    <li>周期信号用傅里叶级数分解</li>
-    <li>非周期信号用傅里叶变换</li>
-    <li>卷积定理：时域卷积 = 频域相乘</li>
-  </ul>
-</div>
-
-<div id="part4" class="card">
-  <h2>📶 四、奈奎斯特抽样定理</h2>
-  <p>带限信号最高频率 fₘ，抽样频率 fₛ > 2fₘ 可无失真恢复。</p>
-  <div class="formula">
-    \[f_s > 2f_m\]
-  </div>
-  <ul>
-    <li>抽样是连续信号转离散的核心步骤</li>
-    <li>抽样频率过低会产生频率混叠</li>
-    <li>可通过 sinc 插值无失真恢复原信号</li>
-  </ul>
-</div>
-
-</div>
-
-<a href="#" class="back-top">↑</a>
 
 <script>
-  const canvas=document.getElementById('waveCanvas');
-  const ctx=canvas.getContext('2d');
-  const dataBox=document.getElementById('dataBox');
-  let waveType='sin';
-  let t=0;
+const canvas=document.getElementById('waveCanvas');
+const ctx=canvas.getContext('2d');
+let w, h;
+function resize(){
+  w=canvas.width=canvas.clientWidth;
+  h=canvas.height=canvas.clientHeight;
+}
+window.addEventListener('resize',resize);
+resize();
 
-  function drawAxis(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.strokeStyle='#b8b0a8';ctx.lineWidth=1;
-    ctx.beginPath();
-    ctx.moveTo(50,canvas.height/2);ctx.lineTo(canvas.width-50,canvas.height/2);
-    ctx.moveTo(canvas.width/2,50);ctx.lineTo(canvas.width/2,canvas.height-50);
-    ctx.stroke();
-  }
+let waveType='sin';
+let amplitude=40;
+let frequency=0.02;
+let time=0;
 
-  function draw(){
-    drawAxis();ctx.lineWidth=2;ctx.strokeStyle='#a9b4b8';
-    ctx.beginPath();
-    for(let x=0;x<canvas.width;x++){
-      let nx=(x-canvas.width/2)/100;
-      let y=0;
-      if(waveType==='sin') y=80*Math.sin(3*nx+t);
-      if(waveType==='square') y=80*(Math.sin(3*nx+t)>0?1:-1);
-      if(waveType==='tri') y=80*(2/Math.PI)*Math.asin(Math.sin(3*nx+t));
-      if(waveType==='step') y=nx>0?-80:80;
-      if(waveType==='impulse'){y=(x===canvas.width/2)?-80:0;ctx.fillStyle='#a9b4b8';if(x===canvas.width/2){ctx.arc(x,canvas.height/2-80,6,0,Math.PI*2);ctx.fill()}}
-      if(waveType==='sa') y=nx===0?-80:-80*Math.sin(nx*5+t)/(nx*5+t);
-      y+=canvas.height/2;
-      if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+// 鼠标交互
+canvas.addEventListener('mousemove',e=>{
+  const rect=canvas.getBoundingClientRect();
+  const x=e.clientX-rect.left;
+  const y=e.clientY-rect.top;
+  amplitude=Math.max(10,Math.min(80,h/2-y));
+  frequency=0.01+(x/w)*0.04;
+});
+
+// 点击波纹
+canvas.addEventListener('click',e=>{
+  const rect=canvas.getBoundingClientRect();
+  const x=e.clientX-rect.left;
+  const y=e.clientY-rect.top;
+  const ripple=document.createElement('div');
+  ripple.className='ripple';
+  ripple.style.left=x+'px';
+  ripple.style.top=y+'px';
+  document.querySelector('.card').appendChild(ripple);
+  setTimeout(()=>ripple.remove(),600);
+});
+
+function setWave(type){
+  waveType=type;
+}
+
+function drawWave(){
+  ctx.clearRect(0,0,w,h);
+  ctx.beginPath();
+  ctx.strokeStyle='#4fc3f7';
+  ctx.lineWidth=2;
+
+  for(let x=0;x<w;x++){
+    let y;
+    switch(waveType){
+      case 'sin':
+        y=h/2+Math.sin(x*frequency+time)*amplitude;
+        break;
+      case 'cos':
+        y=h/2+Math.cos(x*frequency+time)*amplitude;
+        break;
+      case 'square':
+        y=h/2+(Math.sin(x*frequency+time)>=0?amplitude:-amplitude);
+        break;
+      case 'sawtooth':
+        const t=(x*frequency+time)%(2*Math.PI);
+        y=h/2+((t/Math.PI)-1)*amplitude;
+        break;
     }
-    ctx.stroke();t+=0.05;requestAnimationFrame(draw);
+    if(x===0) ctx.moveTo(x,y);
+    else ctx.lineTo(x,y);
   }
-
-  function setWave(type){waveType=type;}
-  draw();
-
-  canvas.addEventListener('mousemove',(e)=>{
-    const rect=canvas.getBoundingClientRect();
-    const x=Math.round((e.clientX-rect.left-canvas.width/2)/100*10)/10;
-    const y=Math.round(((e.clientY-rect.top)-canvas.height/2)/80*10)/10;
-    dataBox.innerText=`坐标数据：x=${x}, y=${y}`;
-  });
+  ctx.stroke();
+  time+=0.03;
+  requestAnimationFrame(drawWave);
+}
+drawWave();
 </script>
-
 </body>
 </html>
