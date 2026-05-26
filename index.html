@@ -11,12 +11,12 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-    --bg:#0a101f;
-    --card:#121a29;
-    --blue:#4fc3f7;
-    --purple:#7c4dff;
-    --green:#00e0b0;
-    --text:#e0e6f0;
+    --bg:#ffffff;
+    --card:#f7f8fa;
+    --blue:#0066cc;
+    --purple:#7733cc;
+    --green:#2eaa62;
+    --text:#222222;
 }
 body{
     font-family:"Microsoft YaHei",sans-serif;
@@ -24,73 +24,97 @@ body{
     color:var(--text);
     line-height:1.8;
     padding-bottom:60px;
+    padding-top:70px;
 }
 .container{max-width:1200px;margin:0 auto;padding:0 20px}
 header{
-    text-align:center;padding:40px 0;
-    background:linear-gradient(90deg,var(--blue),var(--purple));
-    -webkit-background-clip:text;color:transparent;
+    text-align:center;padding:30px 0;
+    color:#222;
 }
-h1{font-size:36px;margin-bottom:10px}
+h1{font-size:32px;margin-bottom:10px}
+
 .nav{
-    background:var(--card);padding:14px;border-radius:12px;margin-bottom:30px;
-    display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:999;
+    background:#ffffff;
+    border-bottom:1px solid #ddd;
+    padding:12px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:center;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
 }
 .nav a{
-    color:#fff;background:#1b2538;padding:8px 16px;border-radius:8px;text-decoration:none;
+    color:#0066cc;
+    background:#f1f5f9;
+    padding:6px 12px;
+    border-radius:6px;
+    text-decoration:none;
+    font-size:14px;
 }
-.nav a:hover{background:linear-gradient(90deg,var(--blue),var(--purple))}
+.nav a:hover{background:#0066cc;color:#fff}
+
 .card{
-    background:var(--card);border-radius:16px;padding:28px;margin-bottom:24px;
-    box-shadow:0 6px 24px rgba(0,0,0,0.3);
+    background:var(--card);
+    border-radius:12px;
+    padding:24px;
+    margin-bottom:20px;
+    border:1px solid #e9ecef;
 }
 .card h2{
-    color:var(--blue);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid #25324a;
+    color:var(--blue);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #ddd;
 }
-.card h3{color:var(--purple);margin:16px 0 8px}
+.card h3{color:var(--purple);margin:14px 0 8px}
 p,li{margin:6px 0}
-ul{margin-left:22px}
+ul{margin-left:20px}
 .formula{
-    background:#162034;padding:14px;border-radius:10px;margin:12px 0;
-    border-left:4px solid var(--green);overflow-x:auto;
+    background:#f1f5f9;
+    padding:12px;
+    border-radius:8px;
+    margin:10px 0;
+    border-left:4px solid var(--green);
+    overflow-x:auto;
 }
 canvas{
-    width:100%;height:320px;background:#000;border-radius:12px;margin:20px 0;
+    width:100%;height:320px;
+    background:#f9f9f9;
+    border-radius:10px;
+    margin:16px 0;
+    border:1px solid #ddd;
 }
 .controls{
-    display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center;margin:20px 0;
+    display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;margin:16px 0;
 }
 button{
-    padding:10px 18px;border:none;border-radius:10px;
-    background:linear-gradient(90deg,var(--blue),var(--purple));
+    padding:8px 16px;border:none;border-radius:8px;
+    background:#0066cc;
     color:#fff;font-weight:bold;cursor:pointer;
 }
-button:hover{transform:translateY(-2px)}
+button:hover{background:#7733cc}
 .slider-group{
-    display:flex;align-items:center;gap:6px;color:#fff;
+    display:flex;align-items:center;gap:6px;color:#222;
 }
-input[type="range"]{
-    width:160px;cursor:pointer;
-}
-.tip{text-align:center;color:#90a4ae;font-size:14px;margin:10px 0;}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+input[type="range"]{width:140px}
+.tip{text-align:center;color:#666;font-size:14px;margin:10px 0;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media (max-width:768px){
     .grid{grid-template-columns:1fr;}
-    h1{font-size:28px;}
+    h1{font-size:26px;}
     .card{padding:20px;}
 }
 .ripple{
     position:absolute;
     border-radius:50%;
-    background:rgba(79,195,247,0.3);
+    background:rgba(0,102,204,0.2);
     animation:ripple 0.6s linear forwards;
     pointer-events:none;
 }
 @keyframes ripple{
-    to{
-        transform:scale(4);
-        opacity:0;
-    }
+    to{transform:scale(4);opacity:0;}
 }
 </style>
 </head>
@@ -276,11 +300,9 @@ let amp=50;
 let fq=0.03;
 let tm=0;
 
-// 滑块实时控制
 freqSlider.oninput=()=>{fq=parseFloat(freqSlider.value)}
 ampSlider.oninput=()=>{amp=parseInt(ampSlider.value)}
 
-// 鼠标控制波形
 c.addEventListener('mousemove',e=>{
     const r=c.getBoundingClientRect();
     amp=Math.max(20,Math.min(100,H/2-(e.y-r.top)));
@@ -289,15 +311,14 @@ c.addEventListener('mousemove',e=>{
     ampSlider.value=amp;
 });
 
-// 点击波纹（已修复！）
 c.addEventListener('click',e=>{
     const rect = c.getBoundingClientRect();
-    const x = e.clientX;
-    const y = e.clientY;
+    const px = e.clientX;
+    const py = e.clientY;
     const ripple = document.createElement('div');
     ripple.classList.add('ripple');
-    ripple.style.left = x + 'px';
-    ripple.style.top = y + 'px';
+    ripple.style.left = px + 'px';
+    ripple.style.top = py + 'px';
     ripple.style.width = '40px';
     ripple.style.height = '40px';
     document.body.appendChild(ripple);
@@ -308,7 +329,7 @@ function setW(y){wt=y}
 
 function draw(){
     x.clearRect(0,0,W,H);
-    x.strokeStyle='#4fc3f7';x.lineWidth=3;
+    x.strokeStyle='#0066cc';x.lineWidth=3;
     x.beginPath();
     for(let i=0;i<W;i++){
         let y=H/2;
